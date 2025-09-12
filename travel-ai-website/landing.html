@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trips Simplified - Landing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f9f9f9; color:#222; }
+
+    /* Navbar */
+    .navbar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 40px; background:#0b2e17; color:#fff;
+      position:fixed; top:0; left:0; right:0; z-index:100;
+    }
+    .brand { font-size:1.3rem; font-weight:600; }
+    .nav-right { display:flex; align-items:center; gap:15px; }
+    .nav-link, .back-btn {
+      background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;
+    }
+
+    /* Profile Dropdown */
+    .profile-dropdown { position:relative; }
+    .profile-btn, .nav-link#profileBtn {
+      background:#0f8a45; border:none; border-radius:50%; width:40px; height:40px;
+      display:flex; justify-content:center; align-items:center;
+      font-size:1.2rem; cursor:pointer; transition:0.3s;
+    }
+    .profile-btn:hover, .nav-link#profileBtn:hover { background:#0c6a35; }
+    .dropdown-content {
+      position:absolute; right:0; top:50px;
+      background:#fff; color:#333; min-width:150px;
+      border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      display:none; flex-direction:column; overflow:hidden;
+    }
+    .dropdown-content a {
+      padding:12px; text-decoration:none; color:#333; font-size:0.9rem;
+      transition:0.3s;
+    }
+    .dropdown-content a:hover { background:#f1f1f1; }
+    .profile-dropdown.active .dropdown-content { display:flex; }
+
+    /* Hero Section */
+    .landing {
+      height:100vh;
+      background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80') no-repeat center/cover;
+      display:flex; justify-content:center; align-items:center;
+      position:relative; padding-top:60px;
+    }
+    .overlay {
+      background:rgba(11,46,23,0.75);
+      padding:50px; border-radius:20px; text-align:center;
+      color:#fff; max-width:500px; width:90%;
+      box-shadow:0 6px 18px rgba(0,0,0,0.3);
+    }
+    .overlay h1 {
+      font-size:2.5rem; margin-bottom:15px;
+    }
+    .overlay p {
+      font-size:1.1rem; margin-bottom:25px; opacity:0.9;
+    }
+    .btn {
+      background:#0f8a45; color:#fff; border:none;
+      padding:12px 25px; border-radius:25px;
+      font-size:1rem; cursor:pointer; transition:0.3s;
+      margin:5px;
+    }
+    .btn:hover { background:#0c6a35; }
+    .btn.alt { background:#28a745; }
+    .btn.alt:hover { background:#1e7c32; }
+
+    /* Footer */
+    footer {
+      background:#0b2e17; color:#fff; text-align:center;
+      padding:20px; position:relative; bottom:0; width:100%;
+    }
+    .socials a { color:#0f8a45; text-decoration:none; margin:0 5px; }
+    .socials a:hover { text-decoration:underline; }
+
+    /* Fade-in animation */
+    .fade-in {
+      animation:fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">🌍 Trips Simplified</div>
+    <div class="nav-right">
+      <button class="back-btn" onclick="history.back()" title="Back">⬅</button>
+      <a href="landing.html" class="nav-link" title="Home">🏠</a>
+      <div class="profile-dropdown" id="profileDropdown">
+        <button class="nav-link" id="profileBtn">👤</button>
+        <div class="dropdown-content">
+          <a href="login.html" id="loginOption">Login / Signup</a>
+          <a href="#" id="logoutOption" style="display:none;" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="landing">
+    <div class="overlay fade-in">
+      <h1>Trips Simplified</h1>
+      <p>Your AI-powered travel partner ✈️</p>
+      <button class="btn" onclick="goToLogin()">Login</button>
+      <button class="btn alt" onclick="goToCreate()">Create Account</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Trips Simplified | Made with ❤️ for SIH</p>
+    <div class="socials">
+      <a href="#">Twitter</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script>
+    function goToLogin() { window.location.href = 'login.html'; }
+    function goToCreate() { window.location.href = 'create-account.html'; }
+
+    // Dropdown toggle
+    const profileDropdown = document.getElementById("profileDropdown");
+    profileDropdown.querySelector("#profileBtn").addEventListener("click", () => {
+      profileDropdown.classList.toggle("active");
+    });
+
+    function logout() {
+      localStorage.removeItem("user");
+      alert("Logged out successfully!");
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>

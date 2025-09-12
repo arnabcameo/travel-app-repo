@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Trips Simplified</title>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif;}
+    body {
+      display:flex; justify-content:center; align-items:center; 
+      height:100vh; background:#0b2e17;
+      background-image: url('https://www.transparenttextures.com/patterns/green-dust-and-scratches.png');
+      color:#fff;
+    }
+    .container {
+      display:flex; width:850px; height:500px; border-radius:15px; overflow:hidden;
+      box-shadow:0 0 30px rgba(0,0,0,0.5); background:#111;
+    }
+    .left {
+      flex:1; background:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=500&q=80') center/cover no-repeat;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      padding:30px; color:#fff;
+    }
+    .left h2 {font-size:2rem; margin-bottom:10px;}
+    .left p {font-size:0.9rem; opacity:0.8;}
+    .right {
+      flex:1; background:#1a1a1a; display:flex; justify-content:center; align-items:center;
+    }
+    form {
+      width:80%; max-width:300px;
+    }
+    form h2 {margin-bottom:20px; text-align:center;}
+    .input-box {
+      margin-bottom:15px;
+    }
+    .input-box input {
+      width:100%; padding:12px; border:none; border-radius:8px;
+      background:#2d2d2d; color:#fff; outline:none;
+    }
+    .input-box input::placeholder {color:#aaa;}
+    .btn {
+      width:100%; padding:12px; background:#0f8a45; border:none;
+      border-radius:8px; color:#fff; font-size:1rem; cursor:pointer;
+      transition:0.3s;
+    }
+    .btn:hover {background:#0c6a35;}
+    .extra {
+      margin-top:10px; font-size:0.85rem; text-align:center;
+    }
+    .extra a {color:#0f8a45; text-decoration:none;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h2>Let’s Get Started</h2>
+      <p>Create an account to explore and simplify your trips ✈️</p>
+    </div>
+    <div class="right">
+      <form id="signupForm">
+        <h2>Create Account</h2>
+        <div class="input-box">
+          <input type="text" id="name" placeholder="Your Name" required>
+        </div>
+        <div class="input-box">
+          <input type="email" id="email" placeholder="Your Email" required>
+        </div>
+        <div class="input-box">
+          <input type="password" id="password" placeholder="Create Password" required>
+        </div>
+        <div class="input-box">
+          <input type="password" id="repeat" placeholder="Repeat Password" required>
+        </div>
+        <button type="submit" class="btn">Sign Up</button>
+        <div class="extra">
+          Already have an account? <a href="login.html">Login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function(e){
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const repeat = document.getElementById("repeat").value;
+
+      if(password !== repeat){
+        alert("Passwords do not match!");
+        return;
+      }
+
+      // create account object
+      const account = {
+        name: name,
+        email: email,
+        password: password
+      };
+
+      // store in localStorage
+      localStorage.setItem("account", JSON.stringify(account));
+
+      alert("Account created successfully! Please login.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

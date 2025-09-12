@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Itinerary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f9f9f9; color:#222; }
+
+    /* Navbar */
+    .navbar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 40px; background:#0b2e17; color:#fff; position:fixed; top:0; left:0; right:0; z-index:100;
+    }
+    .brand { font-size:1.3rem; font-weight:600; }
+    .nav-right { display:flex; align-items:center; gap:15px; }
+    .nav-link, .back-btn {
+      background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;
+    }
+
+    /* Profile Dropdown */
+    .profile-dropdown { position:relative; }
+    .profile-btn, .nav-link#profileBtn {
+      background:#0f8a45; border:none; border-radius:50%; width:40px; height:40px;
+      display:flex; justify-content:center; align-items:center;
+      font-size:1.2rem; cursor:pointer; transition:0.3s;
+    }
+    .profile-btn:hover, .nav-link#profileBtn:hover { background:#0c6a35; }
+    .dropdown-content {
+      position:absolute; right:0; top:50px;
+      background:#fff; color:#333; min-width:150px;
+      border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      display:none; flex-direction:column; overflow:hidden;
+    }
+    .dropdown-content a {
+      padding:12px; text-decoration:none; color:#333; font-size:0.9rem;
+      transition:0.3s;
+    }
+    .dropdown-content a:hover { background:#f1f1f1; }
+    .profile-dropdown.active .dropdown-content { display:flex; }
+
+    /* Hero Section */
+    .hero {
+      text-align:center;
+      padding:100px 20px 40px;
+      background:#eef5f0;
+      margin-top:60px;
+    }
+    .hero h1 { font-size:2rem; margin-bottom:10px; color:#0b2e17; }
+    .hero p { color:#555; }
+
+    /* Trip Summary */
+    .trip-summary {
+      max-width:800px;
+      margin:30px auto;
+      background:#fff;
+      padding:25px;
+      border-radius:15px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    }
+    .trip-summary h2 {
+      margin-bottom:15px;
+      color:#0f8a45;
+      text-align:center;
+    }
+    .trip-details {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+      font-size:0.95rem;
+    }
+    .trip-details div {
+      background:#f7f7f7;
+      padding:12px 15px;
+      border-radius:10px;
+    }
+    .trip-details strong { color:#0b2e17; }
+
+    /* Itinerary Container */
+    #itinerary {
+      max-width:900px;
+      margin:30px auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+      gap:20px;
+      padding:0 20px;
+    }
+    .plan-card {
+      background:#fff; border-radius:15px; overflow:hidden;
+      box-shadow:0 4px 10px rgba(0,0,0,0.1); transition:0.3s;
+      padding:20px; text-align:left;
+    }
+    .plan-card:hover { transform:translateY(-5px); }
+    .plan-card h3 { margin-bottom:10px; color:#0f8a45; }
+    .plan-card p { font-size:0.9rem; line-height:1.5; }
+
+    /* Buttons */
+    .btn {
+      background:#0f8a45; color:#fff; border:none;
+      padding:12px 20px; border-radius:25px;
+      font-size:1rem; cursor:pointer; transition:0.3s;
+    }
+    .btn:hover { background:#0c6a35; }
+    .center-btn { display:flex; justify-content:center; margin-top:30px; }
+
+    /* Footer */
+    footer {
+      background:#0b2e17; color:#fff; text-align:center;
+      padding:20px; margin-top:60px;
+    }
+    .socials a { color:#0f8a45; text-decoration:none; margin:0 5px; }
+    .socials a:hover { text-decoration:underline; }
+
+    /* Responsive */
+    @media(max-width:600px) {
+      .hero h1 { font-size:1.5rem; }
+      .trip-details { grid-template-columns:1fr; }
+      .plan-card { padding:15px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">🌍 Trips Simplified</div>
+    <div class="nav-right">
+      <button class="back-btn" onclick="history.back()" title="Back">⬅</button>
+      <a href="landing.html" class="nav-link" title="Home">🏠</a>
+      <div class="profile-dropdown" id="profileDropdown">
+        <button class="nav-link" id="profileBtn">👤</button>
+        <div class="dropdown-content">
+          <a href="login.html" id="loginOption">Login / Signup</a>
+          <a href="index.html" id="tripsOption" style="display:none;">My Trips</a>
+          <a href="#" id="logoutOption" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero fade-in">
+    <h1>Your Travel Plan ✈️</h1>
+    <p>Here’s a summary of your trip and a day-wise plan.</p>
+  </div>
+
+  <!-- Trip Summary -->
+  <div class="trip-summary fade-in">
+    <h2>Trip Summary</h2>
+    <div class="trip-details">
+      <div><strong>Destination:</strong> <span id="dest"></span></div>
+      <div><strong>Budget:</strong> <span id="budget"></span></div>
+      <div><strong>Duration:</strong> <span id="days"></span> days</div>
+      <div><strong>Travelers:</strong> <span id="people"></span></div>
+    </div>
+  </div>
+
+  <!-- Itinerary Content -->
+  <div id="itinerary" class="fade-in"></div>
+
+  <div class="center-btn">
+    <a href="dashboard.html"><button class="btn">Go to Planner Dashboard</button></a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Trips Simplified | Explore More</p>
+    <div class="socials"><a href="#">Twitter</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></div>
+  </footer>
+
+  <script>
+    // Dropdown toggle
+    const profileDropdown = document.getElementById("profileDropdown");
+    profileDropdown.querySelector("#profileBtn").addEventListener("click", () => {
+      profileDropdown.classList.toggle("active");
+    });
+
+    function logout() {
+      localStorage.removeItem("user");
+      alert("Logged out successfully!");
+      window.location.reload();
+    }
+
+    // Load trip data from localStorage (saved from index.html form)
+    document.addEventListener("DOMContentLoaded", () => {
+      const tripData = JSON.parse(localStorage.getItem("tripData"));
+      if (tripData) {
+        document.getElementById("dest").innerText = tripData.destination || "—";
+        document.getElementById("budget").innerText = "₹" + (tripData.budget || "—");
+        document.getElementById("days").innerText = tripData.days || "—";
+        document.getElementById("people").innerText = tripData.people || "—";
+
+        // Example itinerary generation
+        const itineraryContainer = document.getElementById("itinerary");
+        itineraryContainer.innerHTML = "";
+        for (let i = 1; i <= tripData.days; i++) {
+          const card = document.createElement("div");
+          card.className = "plan-card";
+          card.innerHTML = `
+            <h3>Day ${i}</h3>
+            <p>Activities planned for Day ${i} in ${tripData.destination}. Explore attractions, enjoy food, and relax!</p>
+          `;
+          itineraryContainer.appendChild(card);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

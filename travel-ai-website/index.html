@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trips Simplified - Plan Your Trip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { background:#f9f9f9; color:#222; }
+
+    /* Navbar */
+    .navbar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 40px; background:#0b2e17; color:#fff;
+    }
+    .brand { font-size:1.3rem; font-weight:600; }
+    .nav-right { display:flex; align-items:center; gap:15px; }
+    .nav-link, .back-btn {
+      background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;
+    }
+
+    /* Profile Dropdown */
+    .profile-dropdown { position:relative; }
+    .profile-btn {
+      background:#0f8a45; border:none; border-radius:50%; width:40px; height:40px;
+      display:flex; justify-content:center; align-items:center;
+      font-size:1.2rem; cursor:pointer; transition:0.3s;
+    }
+    .profile-btn:hover { background:#0c6a35; }
+    .dropdown-content {
+      position:absolute; right:0; top:50px;
+      background:#fff; color:#333; min-width:150px;
+      border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      display:none; flex-direction:column; overflow:hidden;
+    }
+    .dropdown-content a {
+      padding:12px; text-decoration:none; color:#333; font-size:0.9rem;
+      transition:0.3s;
+    }
+    .dropdown-content a:hover { background:#f1f1f1; }
+    .profile-dropdown.active .dropdown-content { display:flex; }
+
+    /* Hero Section */
+    .hero-search {
+      text-align:center; 
+      padding:80px 20px 40px; /* extra top spacing below navbar */
+      background:#eef5f0;
+    }
+    .hero-search h1 { font-size:2rem; margin-bottom:25px; color:#0b2e17; }
+
+    .search-box {
+      display:flex; justify-content:center; flex-wrap:wrap; gap:12px;
+    }
+    .search-box input, .search-box button {
+      padding:12px 16px; border-radius:25px; border:1px solid #ccc; 
+      font-size:0.9rem; outline:none;
+    }
+    .search-box input { width:160px; background:#fff; }
+    .search-box button {
+      background:#0f8a45; color:#fff; border:none; cursor:pointer; transition:0.3s;
+    }
+    .search-box button:hover { background:#0c6a35; }
+
+    /* Floating labels for dates */
+    .date-input { position: relative; }
+    .date-input input {
+      width:160px;
+      padding:12px 14px;
+      border-radius:25px;
+      border:1px solid #ccc;
+      background:#fff;
+    }
+    .date-input label {
+      position:absolute;
+      left:18px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#aaa;
+      pointer-events:none;
+      transition:0.2s ease;
+      font-size:0.9rem;
+    }
+    .date-input input:focus + label,
+    .date-input input:not(:placeholder-shown) + label {
+      top:-8px;
+      left:12px;
+      font-size:0.7rem;
+      color:#0f8a45;
+      background:#eef5f0;
+      padding:0 6px;
+      border-radius:4px;
+    }
+
+    /* Section */
+    .section { padding:40px 20px; text-align:center; }
+    .card-container {
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:20px; margin-top:20px;
+    }
+    .card {
+      background:#fff; border-radius:15px; overflow:hidden; 
+      box-shadow:0 4px 10px rgba(0,0,0,0.1); cursor:pointer;
+      transition:0.3s;
+    }
+    .card:hover { transform:translateY(-5px); }
+    .card img { width:100%; height:150px; object-fit:cover; }
+    .card-info { padding:12px; text-align:left; }
+    .card-info h3 { margin-bottom:5px; }
+
+    /* Footer */
+    footer { background:#0b2e17; color:#fff; text-align:center; padding:20px; margin-top:40px; }
+    .socials a { color:#0f8a45; text-decoration:none; margin:0 5px; }
+    .socials a:hover { text-decoration:underline; }
+
+    /* Responsive */
+    @media (max-width:600px) {
+      .search-box input { width:100%; }
+      .date-input input { width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">🌍 Trips Simplified</div>
+    <div class="nav-right">
+      <button class="back-btn" onclick="history.back()" title="Back">⬅</button>
+      <a href="landing.html" class="nav-link" title="Home">🏠</a>
+      <div class="profile-dropdown" id="profileDropdown">
+        <button class="profile-btn">👤</button>
+        <div class="dropdown-content">
+          <a href="login.html" id="loginOption">Login / Signup</a>
+          <a href="index.html" id="tripsOption" style="display:none;">My Trips</a>
+          <a href="#" id="logoutOption" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Search Section -->
+  <div class="hero-search fade-in">
+    <h1>Find Your Perfect Trip ✈️</h1>
+    <div class="search-box">
+      <input type="text" placeholder="Destination" id="destination">
+
+      <div class="date-input">
+        <input type="date" id="checkin" required placeholder=" ">
+        <label for="checkin">Check-in</label>
+      </div>
+
+      <div class="date-input">
+        <input type="date" id="checkout" required placeholder=" ">
+        <label for="checkout">Check-out</label>
+      </div>
+
+      <input type="number" placeholder="Guests" id="guests" min="1">
+      <input type="number" placeholder="Budget ₹" id="budget">
+      <button class="btn" onclick="searchTrips()">Search</button>
+    </div>
+  </div>
+
+  <!-- Popular Destinations -->
+  <div class="section fade-in">
+    <h2>Popular Destinations</h2>
+    <div class="card-container">
+      <!-- Goa -->
+      <div class="card" onclick="selectTrip('Goa', 3, 5500)">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Goa">
+        <div class="card-info"><h3>Goa</h3><p>₹5,500 for 3 nights • ⭐ 4.8</p></div>
+      </div>
+      <!-- Manali -->
+      <div class="card" onclick="selectTrip('Manali', 4, 6200)">
+        <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=800&q=80" alt="Manali">
+        <div class="card-info"><h3>Manali</h3><p>₹6,200 for 4 nights • ⭐ 4.7</p></div>
+      </div>
+      <!-- Jaipur -->
+      <div class="card" onclick="selectTrip('Jaipur', 2, 4800)">
+        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=80" alt="Jaipur">
+        <div class="card-info"><h3>Jaipur</h3><p>₹4,800 for 2 nights • ⭐ 4.6</p></div>
+      </div>
+      <!-- Kerala -->
+      <div class="card" onclick="selectTrip('Kerala', 5, 7000)">
+        <img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=800&q=80" alt="Kerala Backwaters">
+        <div class="card-info"><h3>Kerala</h3><p>₹7,000 for 5 nights • ⭐ 4.9</p></div>
+      </div>
+      <!-- Mumbai -->
+      <div class="card" onclick="selectTrip('Mumbai', 3, 5800)">
+        <img src="https://images.unsplash.com/photo-1603262110263-fb0112e7cc33?auto=format&fit=crop&w=800&q=80" alt="Mumbai">
+        <div class="card-info"><h3>Mumbai</h3><p>₹5,800 for 3 nights • ⭐ 4.6</p></div>
+      </div>
+      <!-- Udaipur -->
+<div class="card" onclick="selectTrip('Udaipur', 3, 5200)">
+  <img src="https://images.unsplash.com/photo-1600047509358-9c1f7a4d2ff5?auto=format&fit=crop&w=800&q=80" alt="Udaipur">
+  <div class="card-info"><h3>Udaipur</h3><p>₹5,200 for 3 nights • ⭐ 4.8</p></div>
+</div>
+
+<!-- Darjeeling -->
+<div class="card" onclick="selectTrip('Darjeeling', 4, 6000)">
+  <img src="https://images.unsplash.com/photo-1627896002382-237c54b4cf2d?auto=format&fit=crop&w=800&q=80" alt="Darjeeling">
+  <div class="card-info"><h3>Darjeeling</h3><p>₹6,000 for 4 nights • ⭐ 4.6</p></div>
+</div>
+
+<!-- Andaman -->
+<div class="card" onclick="selectTrip('Andaman', 5, 10500)">
+  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Andaman Islands">
+  <div class="card-info"><h3>Andaman</h3><p>₹10,500 for 5 nights • ⭐ 4.9</p></div>
+</div>
+
+<!-- Delhi -->
+<div class="card" onclick="selectTrip('Delhi', 3, 5000)">
+  <img src="https://images.unsplash.com/photo-1561121270-6d2b65ff814d?auto=format&fit=crop&w=800&q=80" alt="Delhi">
+  <div class="card-info"><h3>Delhi</h3><p>₹5,000 for 3 nights • ⭐ 4.5</p></div>
+</div>
+
+<!-- Rishikesh -->
+<div class="card" onclick="selectTrip('Rishikesh', 4, 4500)">
+  <img src="https://images.unsplash.com/photo-1608473888473-0a7e8c9c305e?auto=format&fit=crop&w=800&q=80" alt="Rishikesh">
+  <div class="card-info"><h3>Rishikesh</h3><p>₹4,500 for 4 nights • ⭐ 4.7</p></div>
+</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Trips Simplified | Travel Smarter</p>
+    <div class="socials">
+      <a href="#">Twitter</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script>
+  // Toggle dropdown
+  const profileDropdown = document.getElementById("profileDropdown");
+  profileDropdown.querySelector(".profile-btn").addEventListener("click", () => {
+    profileDropdown.classList.toggle("active");
+  });
+
+  function logout() {
+    localStorage.removeItem("user");
+    alert("Logged out successfully!");
+    window.location.reload();
+  }
+
+  function searchTrips() {
+  const destination = document.getElementById("destination").value;
+  const checkin = document.getElementById("checkin").value;
+  const checkout = document.getElementById("checkout").value;
+  const guests = document.getElementById("guests").value;
+  const budget = document.getElementById("budget").value;
+
+  // calculate number of days
+  let days = 0;
+  if (checkin && checkout) {
+    const start = new Date(checkin);
+    const end = new Date(checkout);
+    const diffTime = Math.abs(end - start);
+    days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  // save to localStorage
+  const tripData = {
+    destination,
+    budget,
+    days,
+    people: guests,
+    checkin,
+    checkout
+  };
+  localStorage.setItem("tripData", JSON.stringify(tripData));
+
+  // redirect
+  window.location.href = "itinerary.html";
+}
+
+</script>
+
+</body>
+</html>

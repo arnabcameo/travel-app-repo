@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trips Simplified - Login</title>
+  <style>
+    body {
+      margin: 0; font-family: Arial, sans-serif;
+      height: 100vh; display: flex; justify-content: center; align-items: center;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center/cover;
+    }
+    .container {
+      display: flex; width: 800px; height: 450px; background: rgba(0,0,0,0.7);
+      border-radius: 15px; overflow: hidden; color: #fff;
+    }
+    .left { flex: 1; padding: 40px; }
+    .left h1 { font-size: 28px; margin-bottom: 20px; }
+    .right { flex: 1; background: #111; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+    .right h2 { margin-bottom: 20px; }
+    input {
+      width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px;
+    }
+    .btn {
+      width: 100%; padding: 12px; background: #28a745; border: none; border-radius: 6px; color: #fff; font-size: 16px;
+      cursor: pointer;
+    }
+    .btn:hover { background: #218838; }
+    .socials { margin: 15px 0; }
+    .socials a { margin: 0 5px; color: #fff; text-decoration: none; font-size: 18px; }
+    .footer { margin-top: 10px; font-size: 14px; }
+    .footer a { color: #28a745; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h1>Welcome Back</h1>
+      <p>Login to access your personalized travel plans and continue exploring with Trips Simplified.</p>
+    </div>
+    <div class="right">
+      <h2>Login</h2>
+      <input type="text" id="loginId" placeholder="Phone or Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="btn" onclick="loginUser()">Login</button>
+      <div class="socials">
+        <a href="#">🔵</a>
+        <a href="#">🐦</a>
+        <a href="#">🔴</a>
+      </div>
+      <div class="footer">
+        <a href="#" onclick="forgotPassword()">Forgot password?</a><br>
+        New here? <a href="create-account.html">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loginUser() {
+      const loginId = document.getElementById('loginId').value;
+      const password = document.getElementById('loginPassword').value;
+      const account = JSON.parse(localStorage.getItem("account"));
+      if (account && (account.email === loginId || account.phone === loginId) && account.password === password) {
+        localStorage.setItem("user", JSON.stringify(account));
+        alert("Login successful!");
+        window.location.href = "index.html";
+      } else {
+        alert("Invalid credentials!");
+      }
+    }
+    function forgotPassword() {
+      const email = prompt("Enter registered email:");
+      if (email) alert("Reset link sent to " + email + " (demo).");
+    }
+  </script>
+</body>
+</html>
