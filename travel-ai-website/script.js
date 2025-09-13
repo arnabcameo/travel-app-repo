@@ -66,8 +66,8 @@ function selectTrip(destination, days, budget) {
 }
 
 // --- NEW: API Integrations ---
-const GOOGLE_API_KEY = "YOUR_GOOGLE_API_KEY";   // replace with your key
-const WEATHER_API_KEY = "YOUR_WEATHER_API_KEY"; // replace with your key
+const GOOGLE_API_KEY = "AIzaSyBQpmOeeAdVWTHzll4mwUtkI79ZmAqw44Y";   // replace with your key
+const WEATHER_API_KEY = "5507c6fcb3ff1b67835044dbcfd581af"; // replace with your key
 
 async function fetchPlaces(city, type = "tourist attractions") {
   const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${type}+in+${city}&key=${GOOGLE_API_KEY}`;
@@ -124,4 +124,5 @@ if (window.location.pathname.includes("itinerary.html")) {
     }); 
   }
 }
+
 
