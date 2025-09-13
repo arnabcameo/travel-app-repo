@@ -65,6 +65,23 @@ function selectTrip(destination, days, budget) {
   window.location.href = "itinerary.html";
 }
 
+// --- NEW: API Integrations ---
+const GOOGLE_API_KEY = "YOUR_GOOGLE_API_KEY";   // replace with your key
+const WEATHER_API_KEY = "YOUR_WEATHER_API_KEY"; // replace with your key
+
+async function fetchPlaces(city, type = "tourist attractions") {
+  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${type}+in+${city}&key=${GOOGLE_API_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.results.slice(0, 5); // return top 5
+}
+
+async function fetchWeather(city) {
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`;
+  const res = await fetch(url);
+  return await res.json();
+}
+
 // Load Itinerary
 if (window.location.pathname.includes("itinerary.html")) {
   const tripData = JSON.parse(localStorage.getItem("tripData"));
@@ -75,7 +92,36 @@ if (window.location.pathname.includes("itinerary.html")) {
         <p>🗓 Dates: ${tripData.checkin} to ${tripData.checkout}</p>
         <p>👥 Guests: ${tripData.guests}</p>
         <p>💰 Budget: ₹${tripData.budget}</p>
+        <h3>🌦 Weather</h3>
+        <p id="weather-info">Loading weather...</p>
+        <h3>📍 Top Places to Visit</h3>
+        <ul id="places-list"></ul>
       </div>
     `;
+    // Fetch and show weather
+    fetchWeather(tripData.destination).then(data => {
+      if (data.main) {
+        document.getElementById("weather-info").innerText =
+          `Weather in ${data.name}: ${data.main.temp}°C, ${data.weather[0].description}`;
+      } else {
+        document.getElementById("weather-info").innerText = "Weather data not available.";
+      }
+    });
+
+    // Fetch and show places
+    fetchPlaces(tripData.destination).then(places => {
+      const list = document.getElementById("places-list");
+      if (places.length === 0) {
+        list.innerHTML = "<li>No places found.</li>";
+      } else {
+        list.innerHTML = "";
+        places.forEach(p => {
+          const li = document.createElement("li");
+          li.textContent = p.name + " - " + (p.formatted_address || "");
+          list.appendChild(li);
+        });
+      }
+    }); 
   }
 }
+
